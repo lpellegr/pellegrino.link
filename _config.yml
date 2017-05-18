@@ -1,0 +1,15 @@
+# Site settings
+title: Laurent Pellegrino
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://www.pellegrino.link" # the base hostname & protocol for your site
+
+github_username:  lpellegr
+twitter_username: lpellegr
+
+# Build settings
+markdown: redcarpet
+redcarpet:
+  extensions: ["strikethrough", "with_toc_data"]
+sass:
+  style: :compressed
+  
