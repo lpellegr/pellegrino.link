@@ -7,9 +7,7 @@ github_username:  lpellegr
 twitter_username: lpellegr
 
 # Build settings
-markdown: redcarpet
-redcarpet:
-  extensions: ["strikethrough", "with_toc_data"]
+markdown: kramdown
 sass:
   style: :compressed
   
