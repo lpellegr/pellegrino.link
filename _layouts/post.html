@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<article class="post" itemscope itemtype="https://schema.org/BlogPosting">
 
   <header class="post-header">
     <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
@@ -15,7 +15,7 @@ layout: default
   <div itemprop="keywords">
     Tags:
     {% for tag in page.tags %}
-      <a href="http://www.google.com/search?q={{ tag}}&btnI=I%27m%20feeling%20lucky">{{ tag}}</a>{% if page.tags.last != tag %}, {% endif %}
+      <a href="https://www.google.com/search?q={{ tag}}&btnI=I%27m%20feeling%20lucky">{{ tag}}</a>{% if page.tags.last != tag %}, {% endif %}
     {% endfor %}
   </div>
 </article>
