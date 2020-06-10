@@ -13,10 +13,10 @@ code.highlighter-rouge {
     padding: 2px 4px;
 }
 
-.highlight {
+pre {
     background: #ebf6f3;
-    padding: 0.3em 1.5em;
-    margin-bottom: $spacing-unit / 2;
+    padding: 1.5em;
+    overflow-x: auto;
 
     .c     { color: #998; font-style: italic } // Comment
     .err   { color: #a61717; background-color: #e3d2d2 } // Error

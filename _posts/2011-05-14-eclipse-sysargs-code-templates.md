@@ -13,30 +13,30 @@ Eclipse provides many useful shortcuts including code templates such as `sysout`
 
 <!--more-->
 
-{% highlight java linenos %}
+```java
 public void method(String arg1, int arg2, Object arg3) {
   sysargs
 }
-{% endhighlight %}
+```
 
 
 Concretely, if your purpose is to debug the method above, what you will have to do is to write `sysargs` as depicted on line 2, then press CTRL+Space and you get *automagically* the piece of code below that is ready to be executed for displaying parameter values.
 
-{% highlight java linenos %}
+```java
 public void method(String arg1, int arg2, Object arg3) {
   System.out.println(
     "my.package.MyClass#method(arg1, arg2, arg3) = ("
       + Arrays.toString(new Object[] { arg1, arg2, arg3 }) + ")");
 }
-{% endhighlight %}
+```
 
 
 The configuration is really simple. Go to *Preferences*, *Java*, *Editor*, *Templates*. Then, click on the *New* button and enter the name *sysargs* for your new code template. Finally, copy/paste the following piece of code as pattern.
 
-{% highlight java %}
+```java
 System.out.println(
   "${enclosing_package}.${enclosing_type}#${enclosing_method}(${enclosing_method_arguments}) = ("
     + Arrays.toString(new Object[] {${enclosing_method_arguments}}) + ")");
-{% endhighlight %}
+```
 
 That's all, you are ready to use sysargs!
