@@ -6,6 +6,7 @@ permalink: /about/
 
 My name is Laurent Pellegrino. I'm a senior Software Engineer and Micro-entrepreneur running 
 [Noticeable][noticeable], a notification center/changelog for product managers, marketers and developers. 
+
 I like working with new technologies, especially in Java and TypeScript. In my spare time I maintain the
 [Medical ID][medicalid] Android app and I really appreciate to go jogging.
 
