@@ -15,9 +15,9 @@ tags:
 - JMH
 ---
 
-String concatenation is one of the most well known caveat in Java. Almost all experienced Java developpers have already heard or read explanations about when to use _String_ vs _StringBuilder_/_StringBuffer_ for concatenating Strings.
+String concatenation is one of the most well-known caveats in Java. Almost all experienced Java developers have already heard or read explanations about when to use _String_ vs _StringBuilder_/_StringBuffer_ for concatenating Strings.
 
-These last months I gave some interviews for a Java position in the company where I work. One of the exercices that candidate sometimes have to work on requires to concatenate Strings in a for loop. Obviously, as a ~~pervert~~ programmer, I like to ask people what they think about the performance of the code they write and how it could be improved. The answers were really surprising, especially about String concatenation. Although some explanations were not really convincing, they let me doubt whether using _StringBuilder_/_StringBuffer_ is still required with a recent Java virtual machine.  For this reason, I decided to do some investigations.
+These last months I gave some interviews for a Java position in the company where I work. One of the exercises that candidates sometimes have to work on requires concatenating Strings in a for loop. Obviously, as a ~~pervert~~ programmer, I like to ask people what they think about the performance of the code they write and how it could be improved. The answers were really surprising, especially about String concatenation. Although some explanations were not really convincing, they let me doubt whether using _StringBuilder_/_StringBuffer_ is still required with a recent Java virtual machine.  For this reason, I decided to do some investigations.
 
 <!--more-->
 
@@ -32,11 +32,11 @@ for (int i=0; i<1e6; i++) {
 }
 ```
 
-For instance, the piece of code introduced above is a simple loop that iterates 1M times and concatenates the String "some more data" to the _result_ variable at each iteration. However, using the _+_ operator (which is strictly equivalent to _result = result + "some more data"_ in our example) or even [String#concat(String)](http://docs.oracle.com/javase/8/docs/api/java/lang/String.html#concat-java.lang.String-) does not mean that internally data are sticked at the end of the _result_ variable in one step. It is not possible since String objects are immutable.
+For instance, the piece of code introduced above is a simple loop that iterates 1M times and concatenates the String "some more data" to the _result_ variable at each iteration. However, using the _+_ operator (which is strictly equivalent to _result = result + "some more data"_ in our example) or even [String#concat(String)](http://docs.oracle.com/javase/8/docs/api/java/lang/String.html#concat-java.lang.String-) does not mean that internally data is sticked at the end of the _result_ variable in one step. It is not possible since String objects are immutable.
 
-Under the hood, many operations occur. First, a new array of characters is allocated with a size that fits the existing value contained by the _result_ variable but also the payload that is appended. Then, their value is copied to the new array instance and a new String object is created from the array. Finally, the new String instance replaces the one already assigned to the _result_ variable and this last is marked for [garbage collection](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/gc01/index.html) since it is not longer referenced by a variable.  
+Under the hood, many operations occur. First, a new array of characters is allocated with a size that fits the existing value contained by the _result_ variable but also the payload that is appended. Then, their value is copied to the new array instance and a new String object is created from the array. Finally, the new String instance replaces the one already assigned to the _result_ variable, and this last is marked for [garbage collection](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/gc01/index.html) since it is no longer referenced by a variable.  
 
-This sequence of actions means that as the _result_ variable grows, the amount of data to copy each time grows and the time to complete the operation too. Simple mathematics can be applied to estimate the complexity of the previous piece of code in terms of copy required.
+This sequence of actions means that as the _result_ variable grows, the amount of data to copy each time grows, and the time to complete the operation too. Simple mathematics can be applied to estimate the complexity of the previous piece of code in terms of copy required.
 
 At the first iteration, $14$ characters are copied to an array of characters of size $0 + 14$. The second iteration copies $28$ characters to an array of characters of size $14 + 14$. Then, at the third iteration, an array of size $28 + 14$ is allocated and $36$ characters copied into, and so on and so forth.
 
@@ -81,7 +81,7 @@ public class StaticStringConcatenation {
 }
 ```
 
-An human readable representation of the bytecode that is generated by _javac_ can be obtained for the Java class above. It requires first to generate the class file associated to the source code, then to disassemble this last file using the _javap_ command. Since the previous code, along with all others resources introduced in this post are available on Github in a [dedicated Gradle project](https://github.com/lpellegr/experiments/tree/master/java/string-concatenation), both steps can be reproduced as follows once the project has been cloned:
+A human-readable representation of the bytecode that is generated by _javac_ can be obtained for the Java class above. It requires first to generate the class file associated with the source code, then disassembling this last file using the _javap_ command. Since the previous code, along with all other resources introduced in this post are available on Github in a [dedicated Gradle project](https://github.com/lpellegr/experiments/tree/master/java/string-concatenation), both steps can be reproduced as follows once the project has been cloned:
 
 ```java
 $ ./gradlew build &>-
@@ -120,7 +120,7 @@ public class StaticStringConcatenation {
 }
 ```
 
-In the output above, comments have been manually edited to get a text that fits in the page but also to clarify the bytecode [instructions](https://en.wikipedia.org/wiki/Java_bytecode_instruction_listings). In consequence, it's normal if you get more obscure comment messages when you try to execute the previous commands.
+In the output above, comments have been manually edited to get a text that fits on the page but also to clarify the bytecode [instructions](https://en.wikipedia.org/wiki/Java_bytecode_instruction_listings). In consequence, it's normal if you get more obscure comment messages when you try to execute the previous commands.
 
 Before continuing, some explanations about the JVM internals are required. The Java Virtual Machine (JVM) is an abstract machine that provides a runtime environment in which Java bytecode can be executed. To this aim, the JVM is [made of several components](http://blog.jamesdbloom.com/JVMInternals.html) including among others:
 
@@ -128,7 +128,7 @@ Before continuing, some explanations about the JVM internals are required. The J
   - a _Run Time Constant Pool_ (referred to as _constant pool_ below) to maintain a per-type constant pool;
   - a _Heap_ that is used to allocate class instances and arrays at runtime.
 
-The output produced by _javap_ displays the bytecode instructions using JVM opcodes ([mnemonics](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.4-mnemonic) to be exact). For instance, _aload\_0_ is the first opcode executed when the constructor of the class _StaticStringConcatenation_ is invoked. Its purpose is to push 'this' (the reference to the local object created in the heap) on to the stack. Then, _[invokespecial](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.invokespecial)_  invokes the instance initialization method based on the object reference in the stack (and thus pop the reference from the stack to consume it). The exact class and method to execute is identified in this example by _#1_ in the constant pool. Constant pool values associated to an identifier can be displayed with the `-v` option of `javap`. Finally, _return_ terminates the execution of the constructor.
+The output produced by _javap_ displays the bytecode instructions using JVM opcodes ([mnemonics](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.4-mnemonic) to be exact). For instance, _aload\_0_ is the first opcode executed when the constructor of the class _StaticStringConcatenation_ is invoked. Its purpose is to push 'this' (the reference to the local object created in the heap) on to the stack. Then, _[invokespecial](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.invokespecial)_  invokes the instance initialization method based on the object reference in the stack (and thus pop the reference from the stack to consume it). The exact class and method to execute is identified in this example by _#1_ in the constant pool. Constant pool values associated with an identifier can be displayed with the `-v` option of `javap`. Finally, _return_ terminates the execution of the constructor.
 
 In summary, the JVM makes use of opcodes to execute basic instructions. The execution and pipelining of several instructions is made possible through an intermediary which is the stack. Values are pushed to and/or pop from when opcodes are executed.
 
@@ -214,7 +214,7 @@ public class DynamicStringConcatenation {
 
 If you look quickly at the instructions and comments, you can see there are some references to _StringBuilder_. However, it does not mean that, in this context, String concatenation is "optimized". A closer look (by drawing for instance how the _stack_ evolves) will show you that a new _StringBuilder_ instance is created per iteration. That's because optimization for static string concatenation is applied in the body of the loop but not outside. The compiler cannot compute the concatenating result without executing the instructions, which is not its role.
 
-Supposing that the source code associated to the bytecode of the class _DynamicStringConcatenation_ has to be displayed, then this one would look as follows:  
+Supposing that the source code associated with the bytecode of the class _DynamicStringConcatenation_ has to be displayed, then this one would look as follows:  
 
 ```java
 String result = "";
@@ -307,12 +307,12 @@ The next figure sketches the trends:
 
 <a href="https://docs.google.com/spreadsheets/d/1dV4Pbe2_ZCsc9TDBYsN9u69a2a3xSjCAzxKR7I6fxzg/edit?usp=sharing" target="_blank">![tre](https://docs.google.com/spreadsheets/d/1dV4Pbe2_ZCsc9TDBYsN9u69a2a3xSjCAzxKR7I6fxzg/pubchart?oid=1847999196&format=image)</a>
 
-Using _StringBuilder_/_StringBuffer_ clearly outperform other approaches which use the _+_ operator or _String#concat(String)_ for dynamic String concatenation. Although _String#concat(String)_ scales in a similar manner as the method based on the _+_ operator, the difference of performance between both may be explained by the fact that no transformation is performed by the compiler for _String#concat(String)_. This last does not require to create multiple StringBuilder instances while avoiding the extra copy incurred by the call to _StringBuilder#toString()_.
+Using _StringBuilder_/_StringBuffer_ clearly outperforms other approaches that use the _+_ operator or _String#concat(String)_ for dynamic String concatenation. Although _String#concat(String)_ scales in a similar manner as the method based on the _+_ operator, the difference of performance between both may be explained by the fact that no transformation is performed by the compiler for _String#concat(String)_. This last does not require to create multiple StringBuilder instances while avoiding the extra copy incurred by the call to _StringBuilder#toString()_.
 
 # Conclusion
 
-In summary, Java 8 seems not to introduce new optimizations for String concatenation with the _+_ operator. It means that using _StringBuilder_ manually is still required for specific cases where the compiler or the JIT is not applying magic tricks. For instance, when lot of substrings are concatenated to a String variable defined outside the scope of a loop.
+In summary, Java 8 seems not to introduce new optimizations for String concatenation with the _+_ operator. It means that using _StringBuilder_ manually is still required for specific cases where the compiler or the JIT is not applying magic tricks. For instance, when a lot of substrings are concatenated to a String variable defined outside the scope of a loop.
 
-The reason for not optimizing automatically all String concatenations is still a bit obscure to me. Probably, too much information and efforts are required to handle  all possible cases safely. After all, that's also a good point to make programmers think about what they write.
+The reason for not optimizing automatically all String concatenations is still a bit obscure to me. Probably, too much information and effort are required to handle  all possible cases safely. After all, that's also a good point to make programmers think about what they write.
 
-If you are interested by String optimizations in Java and their associated methods, I recommend to have a look at the interesting [slides made by Aleksey Shipilёv](http://shipilev.net/talks/joker-Oct2014-string-catechism.pdf).
+If you are interested in String optimizations in Java and their associated methods, I recommend having a look at the interesting [slides made by Aleksey Shipilёv](http://shipilev.net/talks/joker-Oct2014-string-catechism.pdf).
