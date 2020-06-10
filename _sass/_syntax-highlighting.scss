@@ -1,6 +1,18 @@
 /**
  * Syntax highlighting styles
  */
+code.highlighter-rouge {
+    color: rgb(199, 37, 78);
+    font-family: "DejaVu Sans Mono", monospace;
+    font-size: 1rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    background: rgb(249, 242, 244);
+    border-radius: 4px;
+    margin: 0;
+    padding: 2px 4px;
+}
+
 .highlight {
     background: #ebf6f3;
     padding: 0.3em 1.5em;
