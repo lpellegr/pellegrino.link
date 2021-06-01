@@ -46,8 +46,8 @@ The next step is to create a client instance:
 
 ```java
 S3Client.builder()
-    .region(Region.of("https://s3.fr-par.scw.cloud"))
-    .endpointOverride(URI.create("fr-par"))
+    .region(Region.of("fr-par"))
+    .endpointOverride(URI.create("https://s3.fr-par.scw.cloud"))
     .credentialsProvider(
         StaticCredentialsProvider.create(
             AwsBasicCredentials.create(accessKey, secretKey))
