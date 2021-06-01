@@ -65,8 +65,8 @@ an _InputStream_:
 final GetObjectRequest objectRequest =
     GetObjectRequest
         .builder()
-        .key(path)
-        .bucket(bucket.getName())
+        .key("path/to/your/object/file")
+        .bucket("your-scaleway-bucket")
         .build();
 
 client.getObject();
