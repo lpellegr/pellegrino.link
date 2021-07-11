@@ -18,7 +18,8 @@ expensive for my use case.
 Looking at affordable solutions, and after reviewing a dozen solutions going 
 from Digital Ocean, Hetzner, OVH, and more, I decided to go with Scaleway.
 
-Why Scaleway? their object storage solution is cheap, you have great 
+Why Scaleway? their object storage solution is cheap (I divided the bill by
+almost 100 compared to Google Cloud Storage), you have great 
 configuration options to manage privacy, lifecycle rules, and up to 100Gbp/s 
 bandwidth. Furthermore, despite their offer uses the public Internet, the 
 peering is quite good Worldwide, meaning you can expect a good bandwidth even if
